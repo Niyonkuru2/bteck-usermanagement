@@ -10,9 +10,11 @@ export const googleCallback = (req, res) => {
 
   const token = generateToken(user);
 
-  // Option 1: Send as JSON (simplest for testing)
-  res.json({ token });
-
-  // Option 2 (better for production):
-  // res.cookie("token", token, { httpOnly: true }).redirect("/dashboard");
+  res
+    .cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    })
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);;
 };

@@ -44,7 +44,7 @@ export default function LoginPage() {
           className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 py-3 rounded-lg font-medium hover:bg-gray-100 transition duration-200 shadow-md cursor-pointer"
         >
           {loading ? (
-            <span className="animate-pulse">Redirecting...</span>
+            <span className="animate-pulse">Sign In...</span>
           ) : (
             <>
               {/* Google SVG Icon */}
