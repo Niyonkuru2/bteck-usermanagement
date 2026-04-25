@@ -3,19 +3,40 @@
 import { useState } from "react";
 import { useVerifiedUsers } from "@/features/protobuf/useVerifiedUsers";
 import { Download } from "lucide-react";
+import { api } from "@/lib/api";
+import { decodeUsers, initProto } from "@/features/protobuf/decode";
 
 export default function DataPanel() {
-  const { data, isLoading } = useVerifiedUsers();
+  // ✅ fetch only first page (for display)
+  const { data, isLoading } = useVerifiedUsers(1, 10);
+
   const [loadingExport, setLoadingExport] = useState(false);
 
-  const users = data ?? [];
-  const count = users.length;
+  const users = data?.users ?? [];
+  const total = data?.meta?.total ?? 0;
 
+  // ✅ EXPORT ALL USERS (iterate pages)
   const handleExportJSON = async () => {
     try {
       setLoadingExport(true);
 
-      const blob = new Blob([JSON.stringify(users, null, 2)], {
+      await initProto();
+
+      const allUsers: any[] = [];
+
+      const totalPages = data?.meta?.totalPages ?? 1;
+
+      for (let page = 1; page <= totalPages; page++) {
+        const res = await api.get("/user/export", {
+          params: { page, limit: 50 }, // bigger batch for export
+          responseType: "arraybuffer",
+        });
+
+        const decoded = decodeUsers(res.data);
+        allUsers.push(...decoded.users);
+      }
+
+      const blob = new Blob([JSON.stringify(allUsers, null, 2)], {
         type: "application/json",
       });
 
@@ -46,16 +67,16 @@ export default function DataPanel() {
           </p>
         </div>
 
-        {/* Count badge */}
+        {/* ✅ TOTAL USERS (FIXED) */}
         <span className="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-600">
-          {isLoading ? "..." : `${count} users`}
+          {isLoading ? "..." : `${total} users`}
         </span>
       </div>
 
       {/* EXPORT BUTTON */}
       <button
         onClick={handleExportJSON}
-        disabled={loadingExport || isLoading || count === 0}
+        disabled={loadingExport || isLoading || total === 0}
         className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl 
         bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium
         hover:opacity-90 active:scale-[0.98] transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
@@ -77,10 +98,10 @@ export default function DataPanel() {
       <div className="text-sm text-gray-500">
         {isLoading ? (
           <span className="animate-pulse">Loading users...</span>
-        ) : count === 0 ? (
+        ) : total === 0 ? (
           <span>No users available for export</span>
         ) : (
-          <span>{count} users ready for export</span>
+          <span>{total} users ready for export</span>
         )}
       </div>
     </div>

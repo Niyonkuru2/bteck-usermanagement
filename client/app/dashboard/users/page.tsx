@@ -36,6 +36,8 @@ export default function UserManagementPage() {
   const filteredUsers = users.filter((u: any) =>
     u.email?.toLowerCase().includes(search.toLowerCase())
   );
+const totalPages = Number(meta?.totalPages || 0);
+const currentPage = Number(meta?.page || 1);
 
   // ROLE COLORS
   const roleStyles: Record<string, string> = {
@@ -216,37 +218,35 @@ export default function UserManagementPage() {
           </table>
         )}
       </div>
+      {totalPages > 1 && (
+  <div className="flex items-center justify-between">
 
-      {/* REAL API PAGINATION */}
-      {meta && meta.totalPages > 1 && (
-        <div className="flex items-center justify-between">
+    <button
+      disabled={currentPage <= 1}
+      onClick={() => setPage((p) => p - 1)}
+      className="px-4 py-2 text-sm rounded-xl border border-gray-200
+      hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+    >
+      Previous
+    </button>
 
-          <button
-            disabled={page === 1}
-            onClick={() => setPage((p) => p - 1)}
-            className="px-4 py-2 text-sm rounded-xl border border-gray-200
-            hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
-          >
-            Previous
-          </button>
+    <div className="text-sm text-gray-500">
+      Page{" "}
+      <span className="font-medium text-gray-800">{currentPage}</span>{" "}
+      of {totalPages}
+    </div>
 
-          <div className="text-sm text-gray-500">
-            Page{" "}
-            <span className="font-medium text-gray-800">{meta.page}</span>{" "}
-            of {meta.totalPages}
-          </div>
+    <button
+      disabled={currentPage >= totalPages}
+      onClick={() => setPage((p) => p + 1)}
+      className="px-4 py-2 text-sm rounded-xl border border-gray-200
+      hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+    >
+      Next
+    </button>
 
-          <button
-            disabled={page === meta.totalPages}
-            onClick={() => setPage((p) => p + 1)}
-            className="px-4 py-2 text-sm rounded-xl border border-gray-200
-            hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
-          >
-            Next
-          </button>
-
-        </div>
-      )}
+  </div>
+)}
 
       {/* MODALS */}
       {modal === "create" && (

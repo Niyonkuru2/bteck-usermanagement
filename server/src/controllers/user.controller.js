@@ -61,19 +61,16 @@ export const getAll = async (req, res) => {
 
 export const exportUsers = async (req, res) => {
   try {
-    // 1. Query params
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
     const offset = (page - 1) * limit;
 
-    // 2. Get paginated users
     const users = await db.all(
       "SELECT * FROM users LIMIT ? OFFSET ?",
       [limit, offset]
     );
 
-    // 3. Total count
     const totalResult = await db.get(
       "SELECT COUNT(*) as count FROM users"
     );
@@ -81,11 +78,14 @@ export const exportUsers = async (req, res) => {
 
     const totalPages = Math.ceil(total / limit);
 
-    // 4. Encode users
     const buffer = encodeUsers(users);
 
-    // 5. Send BOTH buffer + meta
     res.setHeader("Content-Type", "application/x-protobuf");
+    res.setHeader(
+      "Access-Control-Expose-Headers",
+      "X-Total, X-Page, X-Limit, X-Total-Pages"
+    );
+
     res.setHeader("X-Total", total);
     res.setHeader("X-Page", page);
     res.setHeader("X-Limit", limit);
