@@ -14,7 +14,7 @@ export const useCreateUser = () => {
   return useMutation({
     mutationFn: createUser,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["verified-users"], exact: false });
       qc.invalidateQueries({ queryKey: ["graph"] });
     },
   });
@@ -26,7 +26,7 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["verified-users"], exact: false });
       qc.invalidateQueries({ queryKey: ["graph"] });
     },
   });
@@ -38,7 +38,7 @@ export const useUpdateUser = () => {
   return useMutation({
     mutationFn: updateUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({queryKey: ["verified-users"],exact: false,});
     },
   });
 };
