@@ -1,4 +1,4 @@
-# B-TECH Full-Stack Developer Practical Test — Backend
+# B-TECH Full-Stack Practical Test — Backend
 
 ##  Overview
 
@@ -10,7 +10,7 @@ This project is a **mini admin panel backend** built with **Node.js and Express*
 
 * User CRUD (Create, Read, Update, Delete)
 * SQLite database (auto-initialized)
-* Protobuf export (`/user/users/export`)  **MANDATORY REQUIREMENT**
+* Protobuf export (`/user/users/export`) 
 * Cryptographic signing (RSA-2048 + SHA-384)
 * Public key exposure (JWK format)
 * User graph endpoint (last 7 days)
@@ -38,8 +38,8 @@ This project is a **mini admin panel backend** built with **Node.js and Express*
 ### 1. Clone & Install
 
 ```bash
-git clone <repo-url>
-cd backend
+git clone <https://github.com/Niyonkuru2/bteck-usermanagement.gitl>
+cd server
 npm install
 ```
 
@@ -50,7 +50,7 @@ Create `.env` file:
 ```env
 PORT=5000
 JWT_SECRET=your_secret
-
+FRONTEND_URL=http://localhost:3000
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 GOOGLE_CALLBACK_URL=http://localhost:5000/auth/google/callback
@@ -63,7 +63,7 @@ GOOGLE_CALLBACK_URL=http://localhost:5000/auth/google/callback
 ### 3. Run the Server
 
 ```bash
-npm run dev
+npm run server
 ```
 
 Server will start on:
@@ -173,7 +173,7 @@ Authorization: Bearer <token>
 
 ###  Create User
 
-#### `POST /user/users`
+#### `POST /user`
 
 ```json
 {
@@ -198,7 +198,7 @@ Response:
 
 ###  Get All Users
 
-#### `GET /user/users`
+#### `GET /user`
 
 Response:
 
@@ -215,30 +215,23 @@ Response:
   }
 ]
 ```
-
----
-
-### Get Single User
-
-#### `GET /user/users/:id`
-
 ---
 
 ### Update User
 
-#### `PUT /user/users/:id`
+#### `PUT /user/:id`
 
 ---
 
 ###  Delete User
 
-#### `DELETE /user/users/:id`
+#### `DELETE /user/:id`
 
 ---
 
-###  Protobuf Export (CRITICAL)
+###  Protobuf Export
 
-#### `GET /user/users/export`
+#### `GET /user/export`
 
 Headers:
 
@@ -255,7 +248,7 @@ Response:
 
 ###  User Graph
 
-#### `GET /user/users/graph`
+#### `GET /user/graph`
 
 Response:
 
@@ -290,12 +283,10 @@ Response:
 
 Being transparent as required:
 
-* ❗ No pagination implemented yet on `/user/users`
-* ❗ Input validation is minimal (could be improved with Joi/Zod)
-* ❗ No rate limiting or security hardening (helmet, etc.)
-* ❗ JWT stored in response body (frontend should secure it)
-* ❗ No refresh token mechanism
-* ❗ Error handling could be more structured (centralized middleware)
+*  Input validation is minimal (could be improved with Joi/Zod)
+*  No rate limiting or security hardening (helmet, etc.)
+*  JWT stored in response body 
+*  No refresh token mechanism
 
 ---
 
@@ -324,15 +315,11 @@ Being transparent as required:
 
 This implementation prioritizes:
 
-*  Correctness of **Protobuf export (mandatory requirement)**
+*  Correctness of **Protobuf export**
 *  Proper **cryptographic integrity validation**
 *  Clean and modular architecture
 
 ---
-
-##  Ready for Frontend Integration
-
 ---
 
 **Author:** Samuel Niyonkuru
-**Email:** [niyonkurusam5@gail.com](mailto:niyonkurusam5@gail.com)

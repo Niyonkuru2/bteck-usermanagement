@@ -263,7 +263,7 @@ Manually tested:
 
 * Frontend: Vercel [https://bteck-usermanagement.vercel.app/](https://bteck-usermanagement.vercel.app/)
 
-* Backend: Render [/ https://bteck-usermanagement.onrender.com](https://bteck-usermanagement.onrender.com)
+* Backend: Render [https://bteck-usermanagement.onrender.com](https://bteck-usermanagement.onrender.com)
 
 ---
 
