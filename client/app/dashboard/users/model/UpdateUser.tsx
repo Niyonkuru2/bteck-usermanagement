@@ -79,7 +79,7 @@ export default function UpdateUserModal({
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-400 hover:text-gray-900 transition cursor-pointer"
         >
-          ✕
+          X
         </button>
 
         {/* HEADER */}

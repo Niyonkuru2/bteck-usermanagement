@@ -4,18 +4,17 @@ import { useVerifiedUsers } from "../useVerifiedUsers";
 import { CheckCircle2, XCircle } from "lucide-react";
 
 export default function UserTable() {
-  const { data, isLoading } = useVerifiedUsers();
+  const { data, isLoading } = useVerifiedUsers(1, 10); // ✅ pass args if required
 
-  const users = data ?? [];
+  // ✅ FIXED
+  const users = data?.users ?? [];
 
-  // ROLE STYLES
   const roleStyles: Record<string, string> = {
     user: "bg-gray-100 text-gray-700",
     moderator: "bg-blue-100 text-blue-700",
     admin: "bg-purple-100 text-purple-700",
   };
 
-  // STATUS STYLES
   const statusStyles: Record<string, string> = {
     active: "bg-green-100 text-green-700",
     inactive: "bg-gray-100 text-gray-600",
@@ -48,7 +47,6 @@ export default function UserTable() {
 
           <table className="w-full text-sm border-separate border-spacing-y-2">
 
-            {/* HEAD */}
             <thead>
               <tr className="text-left text-gray-500">
                 <th className="py-3 font-medium">Email</th>
@@ -59,20 +57,16 @@ export default function UserTable() {
               </tr>
             </thead>
 
-            {/* BODY */}
             <tbody>
               {users.map((user: any) => (
                 <tr
                   key={user.id}
-                  className="bg-white border border-gray-100 rounded-xl hover:shadow-sm transition"
+                  className="bg-white border border-gray-100 rounded-xl"
                 >
-
-                  {/* EMAIL */}
                   <td className="py-3 px-2 text-gray-800">
                     {user.email}
                   </td>
 
-                  {/* ROLE */}
                   <td className="py-3 px-2">
                     <span
                       className={`px-2 py-1 text-xs rounded-full capitalize ${
@@ -84,7 +78,6 @@ export default function UserTable() {
                     </span>
                   </td>
 
-                  {/* STATUS */}
                   <td className="py-3 px-2">
                     <span
                       className={`px-2 py-1 text-xs rounded-full capitalize ${
@@ -96,12 +89,10 @@ export default function UserTable() {
                     </span>
                   </td>
 
-                  {/* DATE */}
                   <td className="py-3 px-2 text-gray-600">
                     {new Date(user.createdAt).toLocaleDateString()}
                   </td>
 
-                  {/* SIGNATURE */}
                   <td className="py-3 px-2">
                     <span
                       className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${

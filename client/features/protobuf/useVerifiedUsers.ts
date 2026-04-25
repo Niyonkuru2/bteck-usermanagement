@@ -4,31 +4,26 @@ import { decodeUsers, initProto } from "./decode";
 import { getPublicKey } from "../auth/apicall";
 import { verifySignature } from "./verify";
 
-export const useVerifiedUsers = () => {
+export const useVerifiedUsers = (page: number, limit: number) => {
   return useQuery({
-    queryKey: ["verified-users"],
+    queryKey: ["verified-users", page, limit],
     queryFn: async () => {
-      // 1. Ensure proto loaded
       await initProto();
 
-      // 2. Fetch protobuf
       const res = await api.get("/user/export", {
+        params: { page, limit },
         responseType: "arraybuffer",
-        headers: {
-          Accept: "application/x-protobuf",
-          "Cache-Control": "no-cache",
-        },
       });
 
       const decoded = decodeUsers(res.data);
 
-      // 3. Get public key
+      const total = Number(res.headers["x-total"]);
+      const totalPages = Number(res.headers["x-total-pages"]);
+
       const publicKey = await getPublicKey();
 
-      // 4. Verify users
       const verifiedUsers = await Promise.all(
         decoded.users.map(async (user: any) => {
-          // skip users without crypto (Google users)
           if (!user.emailHash || !user.signature) {
             return { ...user, isValid: false };
           }
@@ -43,7 +38,16 @@ export const useVerifiedUsers = () => {
         })
       );
 
-      return verifiedUsers;
+      return {
+        users: verifiedUsers,
+        meta: {
+          total,
+          totalPages,
+          page,
+          limit,
+        },
+      };
     },
+    placeholderData: (previousData) => previousData,
   });
 };

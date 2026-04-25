@@ -18,8 +18,13 @@ import DeleteUserModal from "./model/DeleteUser";
 import ViewUserModal from "./model/ViewUser";
 
 export default function UserManagementPage() {
-  const { data, isLoading } = useVerifiedUsers();
-  const users = data ?? [];
+  const [page, setPage] = useState(1);
+  const limit = 6;
+
+  const { data, isLoading } = useVerifiedUsers(page, limit);
+
+  const users = data?.users ?? [];
+  const meta = data?.meta;
 
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [modal, setModal] = useState<
@@ -32,14 +37,14 @@ export default function UserManagementPage() {
     u.email?.toLowerCase().includes(search.toLowerCase())
   );
 
-  // 🎨 ROLE COLORS (modern SaaS palette)
+  // ROLE COLORS
   const roleStyles: Record<string, string> = {
     user: "bg-gray-100 text-gray-700",
     moderator: "bg-blue-100 text-blue-700",
     admin: "bg-purple-100 text-purple-700",
   };
 
-  // 🎨 STATUS COLORS
+  // STATUS COLORS
   const statusStyles: Record<string, string> = {
     active: "bg-green-100 text-green-700",
     inactive: "bg-gray-100 text-gray-600",
@@ -50,13 +55,12 @@ export default function UserManagementPage() {
 
       {/* HEADER */}
       <div className="flex items-start justify-between">
-
         <div>
           <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
             User Management
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Manage system users ({users.length})
+            Total Users: {meta?.total ?? 0}
           </p>
         </div>
 
@@ -81,13 +85,16 @@ export default function UserManagementPage() {
         transition cursor-text"
       />
 
-      {/* TABLE WRAPPER */}
+      {/* TABLE */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
-        {/* LOADING */}
         {isLoading ? (
           <div className="p-10 text-center text-gray-500 animate-pulse">
             Loading users...
+          </div>
+        ) : filteredUsers.length === 0 ? (
+          <div className="p-10 text-center text-gray-500">
+            No users found
           </div>
         ) : (
           <table className="w-full text-sm">
@@ -96,11 +103,11 @@ export default function UserManagementPage() {
             <thead className="bg-gray-50 text-gray-500 text-left">
               <tr>
                 <th className="p-4 font-medium">Email</th>
-                <th className="font-medium">Role</th>
-                <th className="font-medium">Status</th>
-                <th className="font-medium">Join Date</th>
-                <th className="font-medium">Verification</th>
-                <th className="text-right p-4 font-medium">Actions</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Join Date</th>
+                <th>Verification</th>
+                <th className="text-right p-4">Actions</th>
               </tr>
             </thead>
 
@@ -111,13 +118,8 @@ export default function UserManagementPage() {
                   key={user.id}
                   className="border-t border-gray-100 hover:bg-gray-50 transition"
                 >
+                  <td className="p-4 text-gray-800">{user.email}</td>
 
-                  {/* EMAIL */}
-                  <td className="p-4 text-gray-800">
-                    {user.email}
-                  </td>
-
-                  {/* ROLE */}
                   <td>
                     <span
                       className={`px-2 py-1 text-xs rounded-full capitalize ${
@@ -129,7 +131,6 @@ export default function UserManagementPage() {
                     </span>
                   </td>
 
-                  {/* STATUS */}
                   <td>
                     <span
                       className={`px-2 py-1 text-xs rounded-full capitalize ${
@@ -141,14 +142,12 @@ export default function UserManagementPage() {
                     </span>
                   </td>
 
-                  {/* DATE */}
                   <td className="text-gray-600">
                     {user.createdAt
                       ? new Date(user.createdAt).toLocaleDateString()
                       : "—"}
                   </td>
 
-                  {/* VALIDATION */}
                   <td>
                     <span
                       className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
@@ -176,7 +175,7 @@ export default function UserManagementPage() {
                     <div className="flex justify-end gap-3">
 
                       <button
-                        aria-label="edit"
+                       aria-label="edit"
                         onClick={() => {
                           setSelectedUser(user);
                           setModal("edit");
@@ -187,7 +186,7 @@ export default function UserManagementPage() {
                       </button>
 
                       <button
-                        aria-label="delete"
+                       aria-label="delete"
                         onClick={() => {
                           setSelectedUser(user);
                           setModal("delete");
@@ -217,6 +216,37 @@ export default function UserManagementPage() {
           </table>
         )}
       </div>
+
+      {/* REAL API PAGINATION */}
+      {meta && meta.totalPages > 1 && (
+        <div className="flex items-center justify-between">
+
+          <button
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+            className="px-4 py-2 text-sm rounded-xl border border-gray-200
+            hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+          >
+            Previous
+          </button>
+
+          <div className="text-sm text-gray-500">
+            Page{" "}
+            <span className="font-medium text-gray-800">{meta.page}</span>{" "}
+            of {meta.totalPages}
+          </div>
+
+          <button
+            disabled={page === meta.totalPages}
+            onClick={() => setPage((p) => p + 1)}
+            className="px-4 py-2 text-sm rounded-xl border border-gray-200
+            hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+          >
+            Next
+          </button>
+
+        </div>
+      )}
 
       {/* MODALS */}
       {modal === "create" && (
