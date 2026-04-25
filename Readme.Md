@@ -261,8 +261,9 @@ Manually tested:
 
 #  Deployment Live Project Links
 
-* Frontend: Vercel
-* Backend: Render / Railway
+* Frontend: Vercel [https://bteck-usermanagement.vercel.app/](https://bteck-usermanagement.vercel.app/)
+
+* Backend: Render [/ https://bteck-usermanagement.onrender.com](https://bteck-usermanagement.onrender.com)
 
 ---
 
