@@ -8,7 +8,7 @@ export async function verifySignature(
       "jwk",
       publicKeyJwk,
       {
-        name: "RSA-PSS",
+        name: "RSASSA-PKCS1-v1_5",
         hash: "SHA-384",
       },
       false,
@@ -16,17 +16,14 @@ export async function verifySignature(
     );
 
     const isValid = await window.crypto.subtle.verify(
-      {
-        name: "RSA-PSS",
-        saltLength: 32,
-      },
+      "RSASSA-PKCS1-v1_5",
       publicKey,
       signature,
       emailHash
     );
 
     return isValid;
-  } catch (err) {
+  } catch {
     return false;
   }
 }

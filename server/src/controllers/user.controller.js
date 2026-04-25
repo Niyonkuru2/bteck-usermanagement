@@ -65,6 +65,8 @@ export const exportUsers = async (req, res) => {
   const buffer = encodeUsers(users);
 
   res.setHeader("Content-Type", "application/x-protobuf");
+  res.setHeader("Cache-Control", "no-store");
+
   res.send(buffer);
 };
 

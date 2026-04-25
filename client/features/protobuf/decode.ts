@@ -10,9 +10,11 @@ export const initProto = async () => {
 
 export const decodeUsers = (buffer: ArrayBuffer) => {
   const bytes = new Uint8Array(buffer);
+
   const decoded = UserList.decode(bytes);
+
   return UserList.toObject(decoded, {
     longs: String,
-    bytes: Buffer,
+    bytes: Uint8Array,
   });
 };

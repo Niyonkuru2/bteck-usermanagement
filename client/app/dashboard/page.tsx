@@ -11,9 +11,8 @@ export default function DashboardPage() {
       
       {/* Header */}
       <div>
-        <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
         <p className="text-gray-500 text-sm md:text-base">
-          Welcome back! Here's your system overview.
+          Welcome back! Here's system overview.
         </p>
       </div>
 

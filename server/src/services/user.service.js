@@ -7,12 +7,13 @@ export const createUser = async (db, { email, role, status }) => {
 
     const emailHash = hashEmail(email);
     const signature = signHash(emailHash);
+    const createdAt = new Date().toISOString();
 
     await db.run(
-      `INSERT INTO users (id, email, role, status, emailHash, signature)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [id, email, role, status, emailHash, signature]
-    );
+  `INSERT INTO users (id, email, role, status, emailHash, signature, createdAt)
+   VALUES (?, ?, ?, ?, ?, ?, ?)`,
+  [id, email, role, status, emailHash, signature, createdAt]
+);
 
     return { id, email, role, status };
   } catch (error) {

@@ -10,6 +10,7 @@ export const useProtobufUsers = () => {
         responseType: "arraybuffer",
         headers: {
           Accept: "application/x-protobuf",
+          "Cache-Control": "no-cache",  
         },
       });
 

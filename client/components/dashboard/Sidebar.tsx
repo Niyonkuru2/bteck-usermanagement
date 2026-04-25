@@ -1,31 +1,41 @@
 "use client";
 
-import { useState } from "react";
 import { LayoutDashboard, Users, LogOut } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { api } from "@/lib/api";
 
 export default function Sidebar() {
-  const [active, setActive] = useState("dashboard");
+  const router = useRouter();
+  const pathname = usePathname();
 
   const menu = [
     {
       name: "Dashboard",
       icon: LayoutDashboard,
-      key: "dashboard",
       href: "/dashboard",
     },
     {
       name: "User Management",
       icon: Users,
-      key: "users",
       href: "/dashboard/users",
     },
   ];
 
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+      document.cookie = "token=; Max-Age=0; path=/";
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed");
+    }
+  };
+
   return (
     <aside className="h-full w-full flex flex-col justify-between border-r border-white/10 bg-[#070b18] text-white">
 
-      {/* Top Section */}
       <div className="overflow-y-auto">
+
         {/* Logo */}
         <div className="flex items-center gap-3 p-5 border-b border-white/10">
           <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center font-bold text-black">
@@ -41,13 +51,12 @@ export default function Sidebar() {
         <nav className="p-3 space-y-2 mt-4">
           {menu.map((item) => {
             const Icon = item.icon;
-            const isActive = active === item.key;
+            const isActive = pathname === item.href;
 
             return (
               <a
-                key={item.key}
+                key={item.href}
                 href={item.href}
-                onClick={() => setActive(item.key)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition
                 ${
                   isActive
@@ -61,15 +70,20 @@ export default function Sidebar() {
             );
           })}
         </nav>
+
       </div>
 
-      {/* Bottom Section */}
-      <div className="p-4 border-t border-white/10 space-y-3">
-        <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl hover:bg-white/10 text-white/80">
+      {/* Bottom */}
+      <div className="p-4 border-t border-white/10">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl hover:bg-white/10 text-white/80 transition"
+        >
           <LogOut size={20} />
           Logout
         </button>
       </div>
+
     </aside>
   );
 }

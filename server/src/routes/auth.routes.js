@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "passport";
-import { googleCallback } from "../controllers/auth.controller.js";
+import { getPublicKeyController, googleCallback, logout, me } from "../controllers/auth.controller.js";
+import { authenticateJWT } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
@@ -16,5 +17,9 @@ router.get(
   passport.authenticate("google", { session: false }),
   googleCallback
 );
+
+router.get("/public-key", getPublicKeyController);
+router.get("/me", authenticateJWT, me);
+router.post("/logout", logout);
 
 export default router;
