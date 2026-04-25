@@ -6,9 +6,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleGoogleLogin = () => {
-    setLoading(true);
-    window.location.href = "http://localhost:5000/auth/google";
-  };
+  setLoading(true);
+  window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/google`;
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1e293b] text-white px-4">
