@@ -18,7 +18,7 @@ export default function LoginPage() {
         {/* Logo / Title */}
         <div className="text-center mb-8">
           <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center bg-blue-600 rounded-xl shadow-lg">
-            <span className="text-xl font-bold">B</span>
+            <span className="text-xl font-bold">BT</span>
           </div>
 
           <h1 className="text-2xl font-bold tracking-wide">
