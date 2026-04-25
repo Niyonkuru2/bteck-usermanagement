@@ -218,9 +218,10 @@ const currentPage = Number(meta?.page || 1);
           </table>
         )}
       </div>
-      {totalPages > 1 && (
+   {totalPages > 1 && (
   <div className="flex items-center justify-between">
 
+    {/* Previous */}
     <button
       disabled={currentPage <= 1}
       onClick={() => setPage((p) => p - 1)}
@@ -230,12 +231,27 @@ const currentPage = Number(meta?.page || 1);
       Previous
     </button>
 
-    <div className="text-sm text-gray-500">
-      Page{" "}
-      <span className="font-medium text-gray-800">{currentPage}</span>{" "}
-      of {totalPages}
+    {/* Pages */}
+    <div className="flex items-center gap-2">
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        <button
+          key={page}
+          onClick={() => setPage(page)}
+          className={`
+            w-9 h-9 flex items-center justify-center rounded-full text-sm transition cursor-pointer
+            ${
+              currentPage === page
+                ? "bg-blue-600 text-white"
+                : "text-gray-600 hover:bg-gray-100"
+            }
+          `}
+        >
+          {page}
+        </button>
+      ))}
     </div>
 
+    {/* Next */}
     <button
       disabled={currentPage >= totalPages}
       onClick={() => setPage((p) => p + 1)}
@@ -247,7 +263,6 @@ const currentPage = Number(meta?.page || 1);
 
   </div>
 )}
-
       {/* MODALS */}
       {modal === "create" && (
         <CreateUserModal isOpen onClose={() => setModal(null)} />
