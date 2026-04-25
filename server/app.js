@@ -7,7 +7,13 @@ import authRoutes from "../server/src/routes/auth.routes.js";
 
 const app = express();
 
-app.use(cors({origin: process.env.FRONTEND_URL, credentials: true,}));
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://bteck-usermanagement.vercel.app"
+  ],
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(passport.initialize());
